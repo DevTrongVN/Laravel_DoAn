@@ -1,0 +1,944 @@
+/**
+ * GÓC NHỎ — Profile Dashboard (Trang Cá Nhân)
+ * Giao diện Hoạt hình (Cartoon / Doodle) tươi sáng, hiện đại và sinh động
+ * Version: 2026-11-19-cartoon-v1
+ */
+
+/* ============================================
+   PAGE LAYOUT & BACKGROUND — Doodle Canvas Vibe
+   ============================================ */
+body {
+  font-family: var(--sans, 'Be Vietnam Pro', 'Plus Jakarta Sans', 'Inter', 'DM Sans', -apple-system, sans-serif);
+  background-color: #fbfbf9;
+  background-image: 
+    radial-gradient(#e2e8f0 1.2px, transparent 1.2px),
+    radial-gradient(#e2e8f0 1.2px, #fbfbf9 1.2px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6, .profile-name, .post-title, .feed-header-title {
+  font-family: var(--serif, 'Lora', 'Playfair Display', Georgia, serif);
+}
+
+.profile-main-wrapper {
+  max-width: 860px;
+  margin: 28px auto 60px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   NAVBAR PROFILE ENHANCEMENTS
+   ============================================ */
+.navbar {
+  background: #ffffff !important;
+  border-bottom: 2px solid #eef2f6 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
+  padding: 12px 28px;
+}
+
+.navbar-brand {
+  font-family: var(--serif, 'Lora', 'Playfair Display', Georgia, serif);
+  font-size: 24px;
+  font-weight: 800;
+  color: #10b981 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.5px;
+}
+
+.navbar .nav-btn {
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  color: #334155;
+  border-radius: 20px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.navbar .nav-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: translateY(-2px);
+}
+
+.navbar .nav-btn-danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+.navbar .nav-btn-danger:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* ============================================
+   PROFILE HERO CARD (Hoạt hình / Doodle Header)
+   ============================================ */
+.profile-card-doodle {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 28px;
+  box-shadow: 0 16px 44px rgba(30, 41, 59, 0.06), 0 2px 8px rgba(30, 41, 59, 0.03);
+  overflow: hidden;
+  margin-bottom: 24px;
+  padding: 0 !important;
+  text-align: center;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Cover Banner Hoạt Hình */
+.profile-cover-banner {
+  height: 195px;
+  background: linear-gradient(135deg, #a7f3d0 0%, #bae6fd 45%, #fed7aa 80%, #fef08a 100%);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* Subtle Doodle Overlay pattern */
+.profile-cover-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background-image: 
+    radial-gradient(#065f46 1.5px, transparent 1.5px),
+    radial-gradient(#065f46 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+  pointer-events: none;
+}
+
+/* Floating Doodle Elements on Banner */
+.profile-cover-doodles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@keyframes doodleFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+@keyframes doodleFloatRev {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(6px) rotate(-2deg); }
+}
+
+.cover-doodle-cloud {
+  position: absolute;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.06));
+}
+.cover-cloud-1 {
+  top: 24px;
+  left: 36px;
+  animation: doodleFloat 5s ease-in-out infinite;
+}
+.cover-cloud-2 {
+  top: 38px;
+  right: 50px;
+  animation: doodleFloatRev 6s ease-in-out infinite;
+}
+
+.cover-doodle-star {
+  position: absolute;
+  filter: drop-shadow(0 2px 6px rgba(234, 179, 8, 0.4));
+}
+.cover-star-1 {
+  top: 32px;
+  left: 45%;
+  animation: doodleFloat 4s ease-in-out infinite;
+}
+.cover-star-2 {
+  bottom: 24px;
+  left: 20%;
+  animation: doodleFloatRev 4.5s ease-in-out infinite;
+}
+
+.cover-doodle-sparkle {
+  position: absolute;
+  top: 55px;
+  right: 22%;
+  animation: doodleFloat 3.5s ease-in-out infinite;
+}
+
+.cover-badge-pill {
+  position: absolute;
+  bottom: 14px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #065f46;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Card Body (Inside Profile Header) */
+.profile-card-body {
+  padding: 0 32px 32px;
+  position: relative;
+  text-align: center;
+}
+
+/* Avatar Container Overlapping Banner */
+.profile-avatar-container {
+  display: inline-block;
+  position: relative;
+  margin-top: -65px;
+  margin-bottom: 14px;
+  z-index: 2;
+}
+
+.profile-avatar-ring {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-avatar-large {
+  width: 115px;
+  height: 115px;
+  border-radius: 50%;
+  border: 5px solid #ffffff;
+  box-shadow: 0 0 0 3.5px #10b981, 0 12px 30px rgba(16, 185, 129, 0.28);
+  object-fit: cover;
+  background: #ffffff;
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.profile-avatar-large:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+/* Camera button đổi avatar */
+.btn-change-avatar {
+  position: absolute;
+  right: 2px;
+  bottom: 6px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #10b981;
+  color: #ffffff;
+  border: 3.5px solid #ffffff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-change-avatar:hover {
+  transform: scale(1.2) rotate(12deg);
+  background: #059669;
+}
+
+/* Name & Username */
+.profile-name-heading {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px;
+  letter-spacing: -0.4px;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.profile-username-pill {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Khối Tiểu sử dạng Bong bóng Hoạt hình (Speech Bubble) */
+.profile-bio-container {
+  max-width: 600px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+.profile-bio-bubble {
+  background: #fefce8;
+  border: 2px dashed #facc15;
+  border-radius: 22px;
+  padding: 16px 28px;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(234, 179, 8, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.bio-doodle-quote {
+  font-family: var(--serif, Georgia, serif);
+  font-size: 28px;
+  font-weight: 800;
+  color: #ca8a04;
+  line-height: 1;
+  user-select: none;
+}
+
+#profile-bio-text {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #451a03;
+  margin: 0;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.profile-bio-btn-wrap {
+  margin-top: 10px;
+}
+
+.btn-edit-bio-below {
+  background: #ecfdf5;
+  border: 1.5px solid #10b981;
+  color: #047857;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-edit-bio-below:hover {
+  background: #10b981;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Sticker Badges Row */
+.profile-badges-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.profile-sticker-badge {
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.profile-sticker-badge:hover {
+  transform: translateY(-2.5px) rotate(-1.5deg);
+}
+
+.badge-reputation {
+  background: #fffbeb !important;
+  border: 1.5px solid #fde68a !important;
+  color: #92400e !important;
+}
+.badge-followers {
+  background: #e0f2fe !important;
+  border: 1.5px solid #bae6fd !important;
+  color: #0369a1 !important;
+}
+.badge-posts {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #a7f3d0 !important;
+  color: #047857 !important;
+}
+
+/* Action Buttons Bar */
+.avatar-actions-bar {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.btn-cartoon-action {
+  border-radius: 22px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.btn-action-settings {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+.btn-action-settings:hover {
+  transform: translateY(-2.5px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+}
+
+.btn-action-camera {
+  background: #f0fdf4 !important;
+  border: 1.5px solid #86efac !important;
+  color: #166534 !important;
+}
+.btn-action-camera:hover {
+  background: #dcfce7 !important;
+  transform: translateY(-2px);
+}
+
+.btn-action-reset {
+  background: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #475569 !important;
+}
+.btn-action-reset:hover {
+  background: #f1f5f9 !important;
+  transform: translateY(-2px);
+}
+
+.btn-action-follow {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.35);
+}
+.btn-action-follow:hover {
+  transform: translateY(-2.5px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(244, 63, 94, 0.45);
+}
+
+/* ============================================
+   PERSONAL INSIGHTS (Thống kê bài viết của bạn)
+   ============================================ */
+.profile-insights {
+  margin: 22px 0;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 26px;
+  box-shadow: 0 12px 34px rgba(30, 41, 59, 0.05);
+  transition: all 0.3s ease;
+}
+.profile-insights[hidden] {
+  display: none !important;
+}
+
+.insights-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.insights-icon-bubble {
+  font-size: 22px;
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-insights h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.insights-subtitle {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+/* 5 Candy-colored Stat Cards - Kích cỡ cân đối, tinh tế */
+.profile-insight-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.profile-insight-stat {
+  padding: 13px 10px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1.5px solid transparent;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
+}
+.profile-insight-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* Card 1: Bài viết (Sky Blue) */
+.profile-insight-stat:nth-child(1) {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+}
+.profile-insight-stat:nth-child(1) span { color: #0284c7; }
+.profile-insight-stat:nth-child(1) strong { color: #0369a1; }
+
+/* Card 2: Lượt xem (Mint Emerald) */
+.profile-insight-stat:nth-child(2) {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+.profile-insight-stat:nth-child(2) span { color: #059669; }
+.profile-insight-stat:nth-child(2) strong { color: #047857; }
+
+/* Card 3: Lượt thích (Rose Pink) */
+.profile-insight-stat:nth-child(3) {
+  background: #fff1f2;
+  border-color: #fecdd3;
+}
+.profile-insight-stat:nth-child(3) span { color: #e11d48; }
+.profile-insight-stat:nth-child(3) strong { color: #be123c; }
+
+/* Card 4: Bình luận (Amber Yellow) */
+.profile-insight-stat:nth-child(4) {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.profile-insight-stat:nth-child(4) span { color: #d97706; }
+.profile-insight-stat:nth-child(4) strong { color: #b45309; }
+
+/* Card 5: Chia sẻ (Soft Purple) */
+.profile-insight-stat:nth-child(5) {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+}
+.profile-insight-stat:nth-child(5) span { color: #7c3aed; }
+.profile-insight-stat:nth-child(5) strong { color: #6d28d9; }
+
+.profile-insight-stat span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.profile-insight-stat strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+/* Activity Section */
+.profile-insight-activity {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1.5px dashed #e2e8f0;
+}
+
+.profile-insight-activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.profile-insight-activity h4 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+/* Container hoạt động: Mặc định thu gọn nhỏ nhắn, khi mở rộng to hơn rõ rệt */
+.profile-insight-activity-container {
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.profile-insight-activity-container::-webkit-scrollbar {
+  width: 5px;
+}
+.profile-insight-activity-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.profile-insight-activity-item {
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  background: #f8fafc;
+  border-radius: 14px;
+  border: 1px solid #eef2f6;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+  transition: background 0.2s ease;
+}
+.profile-insight-activity-item:hover {
+  background: #f1f5f9;
+}
+  line-height: 1.5;
+}
+.profile-insight-activity-item strong, .profile-insight-activity-item b {
+  color: #0f172a;
+}
+.profile-insight-activity-item p {
+  margin: 6px 0 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  font-size: 13px;
+}
+.profile-insight-activity-item time {
+  display: block;
+  margin-top: 4px;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.profile-insight-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+.profile-insight-toggle-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* ============================================
+   FEED SECTION HEADER (Bài viết đã đăng)
+   ============================================ */
+.profile-feed-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 16px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(30, 41, 59, 0.04);
+}
+
+.feed-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.feed-header-icon {
+  font-size: 24px;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feed-header-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.feed-header-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 2px 0 0;
+}
+
+/* ============================================
+   POST CARDS (Bài viết phong cách hoạt hình)
+   ============================================ */
+.post-card {
+  background: #ffffff !important;
+  border: 2px solid #eef2f6 !important;
+  border-radius: 26px !important;
+  padding: 24px 28px !important;
+  margin-bottom: 22px !important;
+  box-shadow: 0 10px 30px rgba(25, 45, 75, 0.05) !important;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+
+.post-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 18px 42px rgba(25, 45, 75, 0.09) !important;
+}
+
+/* Header post */
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.post-header .avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
+.post-header .user-name {
+  font-weight: 800;
+  font-size: 15.5px;
+  color: #0f172a;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.post-header .user-name:hover {
+  color: #10b981;
+}
+
+/* Badges Blog / Tin tức */
+.badge-news, .badge-blog {
+  border-radius: 16px !important;
+  padding: 5px 14px !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  transition: transform 0.2s ease !important;
+}
+.badge-news:hover, .badge-blog:hover {
+  transform: rotate(-2deg);
+}
+
+.badge-blog {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #86efac !important;
+  color: #065f46 !important;
+}
+
+.badge-news {
+  background: #eff6ff !important;
+  border: 1.5px solid #93c5fd !important;
+  color: #1e40af !important;
+}
+
+/* Post Content */
+.post-title {
+  font-family: var(--serif, 'Lora', 'Playfair Display', Georgia, serif);
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.45;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.post-title:hover {
+  color: #059669;
+}
+
+.post-summary {
+  font-size: 14.5px;
+  color: #475569;
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+/* Hashtags */
+.post-hashtags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.post-hashtag-pill {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  color: #475569;
+  border-radius: 14px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+.post-hashtag-pill:hover {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+  transform: translateY(-2px);
+}
+
+/* Post Thumbnail */
+.post-image {
+  border-radius: 20px;
+  border: 2px solid #f1f5f9;
+  margin-bottom: 16px;
+  max-height: 380px;
+  object-fit: cover;
+  width: 100%;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+/* Interactive Stats & Buttons */
+.post-interactive-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1.5px dashed #e2e8f0;
+  flex-wrap: wrap;
+}
+
+.stat-btn {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 7px 15px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.stat-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+}
+
+.stat-btn.active, .stat-btn-bookmark.active {
+  background: #fefce8 !important;
+  border-color: #fde047 !important;
+  color: #a16207 !important;
+}
+
+/* ============================================
+   MODALS ENHANCEMENTS
+   ============================================ */
+.modal-content {
+  border-radius: 28px !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25) !important;
+}
+
+.input-field {
+  border-radius: 16px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+.input-field:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.2) !important;
+  outline: none !important;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+  .profile-main-wrapper {
+    padding: 0 14px;
+    margin: 16px auto 40px;
+  }
+  .profile-cover-banner {
+    height: 155px;
+  }
+  .profile-card-body {
+    padding: 0 18px 24px;
+  }
+  .profile-avatar-container {
+    margin-top: -50px;
+  }
+  .profile-avatar-large {
+    width: 96px;
+    height: 96px;
+  }
+  .profile-name-heading {
+    font-size: 23px;
+  }
+  .profile-insight-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .profile-insight-stat:nth-child(5) {
+    grid-column: span 2;
+  }
+  .profile-feed-header-bar {
+    padding: 14px 18px;
+  }
+  .post-card {
+    padding: 18px 18px !important;
+    border-radius: 20px !important;
+  }
+}

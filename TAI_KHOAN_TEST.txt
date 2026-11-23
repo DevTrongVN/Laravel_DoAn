@@ -1,0 +1,20 @@
+TAI KHOAN DUNG DE TEST LOCAL
+
+Trang dang nhap:
+http://localhost/DoAnMaNguonMo/public/account.html
+
+Tai khoan quan tri:
+Email: admin@example.com
+Mat khau: admin12345
+
+Tai khoan nguoi dung:
+Email: demo@example.com
+Mat khau: demo12345
+
+Neu dang nhap khong duoc:
+1. Mo Laragon va chon Start All.
+2. Mo Terminal Laragon, vao thu muc DoAnMaNguonMo.
+3. Chay scripts\\setup.php bang PHP de tao database va tai khoan mau.
+   Lenh mau: php scripts/setup.php
+
+Luu y: Day la tai khoan mau chi danh cho moi truong local de test.

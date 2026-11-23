@@ -1,0 +1,895 @@
+/**
+ * Góc Nhỏ — Animations & Visual Effects
+ * Hiệu ứng hình ảnh động, scroll-reveal, parallax, particle, image hover
+ * Không thay đổi bố cục và chức năng.
+ */
+
+/* ========================================================
+   SCROLL-REVEAL: Các phần tử hiện dần khi cuộn trang
+   ======================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Các biến thể hướng xuất hiện */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reveal-left.revealed,
+.reveal-right.revealed,
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hiệu ứng delay xếp chồng (staggered) cho các thẻ */
+.stagger-1 { transition-delay: 0.06s; }
+.stagger-2 { transition-delay: 0.12s; }
+.stagger-3 { transition-delay: 0.18s; }
+.stagger-4 { transition-delay: 0.24s; }
+.stagger-5 { transition-delay: 0.30s; }
+.stagger-6 { transition-delay: 0.36s; }
+
+/* ========================================================
+   HERO: PARALLAX & FLOATING PARTICLES
+   ======================================================== */
+.blog-hero {
+  overflow: hidden;
+}
+
+/* Lớp hạt lấp lánh trôi nổi trên hero */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+  animation: particleFloat linear infinite;
+  filter: blur(0.5px);
+}
+
+@keyframes particleFloat {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-110vh) translateX(40px) rotate(180deg); opacity: 0; }
+}
+
+/* Hero background ken burns zoom chậm */
+.blog-hero {
+  background-size: cover;
+  animation: heroKenBurns 25s ease-in-out infinite alternate;
+}
+
+@keyframes heroKenBurns {
+  0%   { background-position: center 48%; background-size: 110%; }
+  100% { background-position: center 54%; background-size: 120%; }
+}
+
+/* Hero copy fade-in & slide-up khi tải trang */
+.hero-copy {
+  z-index: 2;
+  animation: heroFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow {
+  animation: heroFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+.hero-copy h1 {
+  animation: heroFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+
+.hero-copy p {
+  animation: heroFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+}
+
+.hero-cta {
+  animation: heroFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
+}
+
+.hero-note {
+  animation: heroFadeIn 0.8s ease 1.2s both;
+}
+
+/* Hiệu ứng nút CTA hero nhấp nháy tinh tế */
+.hero-cta {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-cta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: shimmer 3.5s ease-in-out infinite 2s;
+}
+
+@keyframes shimmer {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ========================================================
+   FEATURED CARD HOVER: 3D Tilt & Image Zoom
+   ======================================================== */
+.featured-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s ease;
+}
+
+/* Background ảnh zoom nhẹ khi hover */
+.featured-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
+}
+
+.featured-card:hover::before {
+  transform: scale(1.08);
+}
+
+.featured-card .featured-copy,
+.featured-card .featured-number {
+  position: relative;
+  z-index: 2;
+}
+
+/* Arrow chạy phải khi hover */
+.featured-read i {
+  transition: transform 0.3s ease;
+}
+
+.featured-card:hover .featured-read i {
+  transform: translateX(6px);
+  animation: arrowBounce 0.6s ease infinite;
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateX(6px); }
+  50%      { transform: translateX(10px); }
+}
+
+/* ========================================================
+   POST CARD: Hình ảnh thumbnail & hover effects
+   ======================================================== */
+/* Ảnh thumbnail trong feed - zoom & shine khi hover */
+.post-image,
+.post-thumbnail {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.4s ease;
+}
+
+.post-card:hover .post-image,
+.post-card:hover .post-thumbnail {
+  transform: scale(1.03);
+  filter: brightness(1.04) saturate(1.08);
+}
+
+/* Container hình ảnh bọc ảnh cho shine effect */
+.post-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-sm, 8px);
+  margin: 12px 0;
+}
+
+.post-image-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  transform: translateX(-200%);
+  transition: transform 0s;
+  pointer-events: none;
+}
+
+.post-image-wrapper:hover::after {
+  transform: translateX(200%);
+  transition: transform 0.7s ease;
+}
+
+/* Huy hiệu "Ảnh" nhỏ overlay trên ảnh */
+.post-image-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.post-image-wrapper:hover .post-image-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Xem trước ảnh upload - tilt nhẹ */
+.image-preview-container {
+  position: relative;
+  border-radius: var(--radius-md, 12px);
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease;
+}
+
+.image-preview-container:hover {
+  transform: perspective(600px) rotateY(2deg) rotateX(-1deg);
+}
+
+.image-preview-img {
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.image-preview-container:hover .image-preview-img {
+  transform: scale(1.04);
+  filter: brightness(1.05);
+}
+
+/* ========================================================
+   ABOUT CARD: Avatar ring animation
+   ======================================================== */
+.about-avatar {
+  position: relative;
+}
+
+.about-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--green-accent, #10b981),
+    var(--green-dark, #1f4532),
+    var(--accent-sky, #0284c7),
+    var(--green-accent, #10b981)
+  );
+  z-index: -1;
+  animation: avatarRingSpin 8s linear infinite;
+}
+
+@keyframes avatarRingSpin {
+  to { transform: rotate(360deg); }
+}
+
+.about-avatar img {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.5s ease;
+}
+
+.about-avatar:hover img {
+  transform: scale(1.08) rotate(-3deg);
+  filter: brightness(1.08);
+}
+
+/* ========================================================
+   BRAND LOGO: Heartbeat animation trên trang chính
+   ======================================================== */
+.blog-brand .brand-mark {
+  animation: brandPulse 4s ease-in-out infinite;
+}
+
+@keyframes brandPulse {
+  0%, 100% { box-shadow: 0 3px 10px rgba(31, 69, 50, 0.25); }
+  50%      { box-shadow: 0 3px 10px rgba(31, 69, 50, 0.25), 0 0 18px rgba(16, 185, 129, 0.35); }
+}
+
+/* ========================================================
+   SIDEBAR WIDGETS: Slide-in từ mép & hover effects
+   ======================================================== */
+.editorial-following .sidebar-card {
+  animation: sidebarSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}
+
+@keyframes sidebarSlideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.editorial-aside .sidebar-card,
+.editorial-aside .about-card {
+  animation: sidebarSlideRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.editorial-aside > :nth-child(1) { animation-delay: 0.3s; }
+.editorial-aside > :nth-child(2) { animation-delay: 0.45s; }
+.editorial-aside > :nth-child(3) { animation-delay: 0.6s; }
+.editorial-aside > :nth-child(4) { animation-delay: 0.75s; }
+
+@keyframes sidebarSlideRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Widget news hover - đường viền trái xuất hiện */
+.widget-news-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.widget-news-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  background: var(--green-accent, #10b981);
+  border-radius: 2px;
+  transform: translateY(-50%);
+  transition: height 0.3s ease;
+}
+
+.widget-news-item:hover::before {
+  height: 65%;
+}
+
+/* Hashtag pill: bounce nhẹ khi hover */
+.post-hashtag-pill-widget:hover,
+.post-hashtag-pill:hover {
+  animation: tagBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tagBounce {
+  0%   { transform: translateY(0); }
+  40%  { transform: translateY(-5px); }
+  100% { transform: translateY(-1px); }
+}
+
+/* ========================================================
+   NEWSLETTER NOTE: Gradient border animation
+   ======================================================== */
+.newsletter-note {
+  position: relative;
+  overflow: visible;
+  height: auto;
+  max-height: none;
+  flex-shrink: 0;
+}
+
+.newsletter-note::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    135deg,
+    var(--green-accent, #10b981),
+    var(--accent-sky, #0284c7),
+    var(--green, #2d6347)
+  );
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: gradientBorder 4s ease infinite;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.newsletter-note:hover::before {
+  opacity: 1;
+}
+
+@keyframes gradientBorder {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ========================================================
+   MODAL: Entrance animation cải tiến
+   ======================================================== */
+.modal-overlay {
+  transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.modal-content {
+  animation: modalEntrance 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ========================================================
+   POST CARD: Hiệu ứng xuất hiện từng bài khi render
+   ======================================================== */
+.feed-posts .post-card {
+  animation: postCardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.feed-posts .post-card:nth-child(1) { animation-delay: 0.05s; }
+.feed-posts .post-card:nth-child(2) { animation-delay: 0.12s; }
+.feed-posts .post-card:nth-child(3) { animation-delay: 0.19s; }
+.feed-posts .post-card:nth-child(4) { animation-delay: 0.26s; }
+.feed-posts .post-card:nth-child(5) { animation-delay: 0.33s; }
+.feed-posts .post-card:nth-child(6) { animation-delay: 0.4s; }
+
+@keyframes postCardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Hiệu ứng "ink" khi nhấn nút tương tác */
+.stat-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(45, 99, 71, 0.12) 30%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+  border-radius: inherit;
+  transition: none;
+}
+
+.stat-btn:active::after {
+  transform: scale(2.5);
+  opacity: 1;
+  transition: transform 0.5s ease, opacity 0.4s ease;
+}
+
+/* ========================================================
+   LOADING SKELETON: Cho feed khi đang tải dữ liệu
+   ======================================================== */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #eef1ec;
+  border-radius: 6px;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: skeletonWave 1.8s ease infinite;
+}
+
+@keyframes skeletonWave {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+.skeleton-title {
+  width: 70%;
+  height: 18px;
+  margin: 12px 0 8px;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 13px;
+  margin-bottom: 6px;
+}
+
+.skeleton-text-short {
+  width: 55%;
+  height: 13px;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 180px;
+  margin: 12px 0;
+  border-radius: var(--radius-sm, 8px);
+}
+
+/* ========================================================
+   FOOTER: Animate khi hiện
+   ======================================================== */
+.blog-footer {
+  animation: fadeInUp 0.6s ease 0.5s both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================================
+   NÚT CUỘN LÊN ĐẦU TRANG (Back to Top)
+   ======================================================== */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-dark, #1f4532), var(--green, #2d6347));
+  color: #ffffff;
+  border: 0;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(31, 69, 50, 0.3);
+  z-index: 50; /* Thấp hơn sidebar cards & nút hành động để không che khuất tương tác */
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 8px 28px rgba(31, 69, 50, 0.4);
+}
+
+.back-to-top i,
+.back-to-top svg {
+  transition: transform 0.2s ease;
+}
+
+.back-to-top:hover i,
+.back-to-top:hover svg {
+  transform: translateY(-2px);
+}
+
+/* ========================================================
+   TYPING CURSOR: Hero subtitle
+   ======================================================== */
+.typing-cursor::after {
+  content: '|';
+  animation: blink 0.8s step-end infinite;
+  margin-left: 2px;
+  color: var(--green-accent, #10b981);
+  font-weight: 300;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ========================================================
+   COMPOSER: Focus glow effect
+   ======================================================== */
+.composer-card:focus-within {
+  border-color: var(--green-accent, #10b981) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15),
+              0 8px 24px rgba(18, 38, 25, 0.08) !important;
+}
+
+/* Nút đăng bài - sparkle khi hover */
+.create-post-actions .action-btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.create-post-actions .action-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(255,255,255,0.15) 45deg,
+    transparent 90deg
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: sparkleRotate 3s linear infinite;
+}
+
+.create-post-actions .action-btn-primary:hover::before {
+  opacity: 1;
+}
+
+@keyframes sparkleRotate {
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================================
+   Giảm hiệu ứng nếu người dùng yêu cầu (prefers-reduced-motion)
+   ======================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal, .reveal-left, .reveal-right, .reveal-scale {
+    opacity: 1;
+    transform: none;
+  }
+  .blog-hero {
+    animation: none;
+  }
+}
+
+
+/* ========================================================
+   IMAGE LIGHTBOX (Xem ảnh phóng to toàn màn hình)
+   ======================================================== */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(10, 20, 14, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  cursor: zoom-out;
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 92vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 88vh;
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  transform: scale(0.92);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: default;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lightbox-overlay.active .lightbox-img {
+  transform: scale(1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 22px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 10;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* ========================================================
+   NAVBAR SHRINK: Nhỏ lại khi cuộn trang
+   ======================================================== */
+.blog-header {
+  transition: height 0.35s ease,
+              box-shadow 0.35s ease,
+              background 0.35s ease;
+}
+
+.blog-header.header-scrolled {
+  height: 60px;
+  box-shadow: 0 4px 20px rgba(20, 40, 28, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.blog-header.header-scrolled .brand-mark {
+  height: 30px;
+  width: 30px;
+  font-size: 18px;
+  transition: all 0.35s ease;
+}
+
+.blog-header.header-scrolled .blog-brand {
+  font-size: 15px;
+  transition: font-size 0.35s ease;
+}
+
+.blog-header.header-scrolled .blog-nav-link {
+  font-size: 12px;
+  transition: font-size 0.35s ease;
+}
+
+
+/* ========================================================
+   CARTOON AVATARS: Playful Wiggle, Bounce & Spring Effects
+   ======================================================== */
+.avatar,
+.post-avatar,
+.comment-avatar,
+.fb-avatar-img,
+.fb-avatar-52,
+.account-avatar,
+.profile-avatar-large,
+.profile-avatar-lg,
+.user-avatar-sm {
+  background: linear-gradient(135deg, #fef3c7, #e0e7ff);
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 3px 10px rgba(45, 106, 79, 0.12), 0 0 0 2px rgba(45, 106, 79, 0.15) !important;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              filter 0.3s ease !important;
+  transform-origin: center bottom;
+  cursor: pointer;
+}
+
+/* Hiệu ứng nảy lắc lư tinh nghịch khi rê chuột */
+.avatar:hover,
+.post-avatar:hover,
+.comment-avatar:hover,
+.fb-avatar-btn:hover .fb-avatar-img,
+.fb-card-profile:hover .fb-avatar-52,
+.profile-avatar-large:hover,
+.profile-avatar-lg:hover,
+.account-avatar:hover,
+.sidebar-user-item:hover .avatar {
+  transform: scale(1.15) rotate(4deg) !important;
+  box-shadow: 0 8px 20px rgba(45, 106, 79, 0.28), 0 0 0 2.5px #10b981 !important;
+  filter: brightness(1.08) drop-shadow(0 4px 8px rgba(16, 185, 129, 0.2)) !important;
+  animation: avatarPlayfulWiggle 0.6s ease-in-out;
+}
+
+/* Keyframe lắc lư hoạt hình vui nhộn */
+@keyframes avatarPlayfulWiggle {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.18) rotate(-7deg); }
+  50% { transform: scale(1.15) rotate(6deg); }
+  75% { transform: scale(1.16) rotate(-3deg); }
+  100% { transform: scale(1.15) rotate(4deg); }
+}
+
+/* Hiệu ứng nhún lò xo (boing) khi bấm vào avatar */
+.avatar:active,
+.post-avatar:active,
+.comment-avatar:active,
+.fb-avatar-btn:active .fb-avatar-img,
+.profile-avatar-large:active,
+.profile-avatar-lg:active {
+  transform: scale(0.88) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* Chấm xanh online phát xung vui nhộn */
+.fb-active-dot {
+  animation: activeDotRipple 2s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+}
+
+@keyframes activeDotRipple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* Hiệu ứng avatar lớn trang tác giả (About Card) */
+.about-avatar {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.about-avatar:hover {
+  transform: scale(1.1) rotate(-3deg) !important;
+}
+
+.about-avatar img {
+  background: linear-gradient(135deg, #fef08a, #fed7aa);
+}

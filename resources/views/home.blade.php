@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f5f1">
+  <title>Góc Nhỏ — Blog cá nhân</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap&subset=vietnamese" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v=20261118-laravel1">
+  <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}?v=20261118-laravel1">
+  <link rel="stylesheet" href="{{ asset('assets/css/blog-theme.css') }}?v=20261118-laravel1">
+  <link rel="stylesheet" href="{{ asset('assets/css/animations.css') }}?v=20261118-laravel1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body class="blog-home">
+  <header class="blog-header">
+    <div class="blog-header-inner">
+      <a class="blog-brand" href="{{ url('/') }}" aria-label="Góc Nhỏ - Trang chủ"><span class="brand-mark">g.</span><span>góc nhỏ</span></a>
+      <nav class="blog-nav" aria-label="Điều hướng chính">
+        <a class="blog-nav-link is-active" href="#home">Trang chủ</a>
+        <a class="blog-nav-link" href="#feed" onclick="filterNavFeed('home')">Bài viết</a>
+        <a class="blog-nav-link" href="#feed" onclick="filterNavFeed('news')">Tin tức</a>
+        <a class="blog-nav-link" href="#about">Về mình</a>
+      </nav>
+      <div class="blog-header-actions">
+        <label class="blog-search" aria-label="Tìm bài viết"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--muted-light,#7c827d);flex-shrink:0;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><input id="smart-search-input" type="search" placeholder="Tìm một điều hay..." autocomplete="off"></label>
+        <a href="{{ url('/admin') }}" class="blog-admin-link" title="Trang quản trị hệ thống" id="nav-admin-link"><i class="fa-solid fa-sliders"></i> <span>Quản trị</span></a>
+        <!-- Nút Chuông Thông Báo -->
+        <div class="notification-bell-wrapper" id="nav-notification-wrapper" style="display:none;">
+          <button type="button" class="nav-bell-btn" id="nav-bell-btn" title="Thông báo" aria-label="Thông báo" aria-haspopup="true" aria-expanded="false">
+            <svg class="nav-bell-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="bell-badge" id="nav-bell-badge" style="display:none;">0</span>
+          </button>
+          <div class="nav-notification-dropdown" id="nav-notification-dropdown" style="display:none;">
+            <div class="notif-dropdown-header">
+              <h4>Thông báo</h4>
+              <div class="notif-dropdown-actions">
+                <button type="button" class="notif-read-all-btn" id="dropdown-mark-all-read" title="Đánh dấu tất cả đã đọc">
+                  <svg class="notif-check-double-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-right:4px;"><polyline points="18 6 7 17 2 12"></polyline><polyline points="22 10 13 19 10 16"></polyline></svg>Đã đọc
+                </button>
+                <a href="{{ url('/notifications') }}" class="notif-view-all-link">Xem tất cả</a>
+              </div>
+            </div>
+            <div class="notif-dropdown-list" id="dropdown-notif-list">
+              <div class="notif-dropdown-loading"><svg class="icon-spin-slow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> Đang tải thông báo...</div>
+            </div>
+            <div class="notif-dropdown-footer">
+              <a href="{{ url('/notifications') }}" class="notif-see-full-link">
+                <span>Đi tới Trung tâm thông báo</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-left:4px;" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="fb-menu-wrapper" id="fb-user-menu-container">
+          <button type="button" class="fb-avatar-btn" id="fb-avatar-trigger" title="Tài khoản cá nhân" aria-haspopup="true" aria-expanded="false">
+            <img id="fb-nav-avatar" class="fb-avatar-img" src="{{ asset('assets/images/avatars/user-admin.svg') }}" alt="Tài khoản">
+            <span class="fb-nav-name" id="fb-nav-username"></span>
+            <span class="fb-avatar-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+          </button>
+          <div class="fb-dropdown-panel" id="fb-dropdown-panel" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="blog-hero" aria-label="Giới thiệu blog">
+      <div class="hero-shade"></div>
+      <div class="hero-copy">
+        <span class="hero-eyebrow"><span></span> Một góc để sống chậm</span>
+        <h1>Chuyện nhỏ,<br><em>nghĩ thật lâu.</em></h1>
+        <p>Ghi lại những điều mình đọc, thấy và học được trên hành trình mỗi ngày.</p>
+        <a href="#feed" class="hero-cta">Khám phá bài viết <i class="fa-solid fa-arrow-down"></i></a>
+      </div>
+      <div class="hero-note"><i class="fa-regular fa-sun"></i><span>Viết từ những ngày bình thường</span></div>
+    </section>
+
+    <section class="featured-section page-shell" aria-labelledby="featured-heading">
+      <div class="section-heading"><div><span class="section-kicker">Được đọc nhiều</span><h2 id="featured-heading">Chuyện đáng để dừng lại</h2></div><span class="section-count">01 — 03</span></div>
+      <div class="featured-grid">
+        <a class="featured-card featured-food" href="#feed" onclick="filterHashtag('congnghe')"><span class="featured-number">01</span><span class="featured-copy"><span class="featured-category">Công nghệ · 6 phút đọc</span><strong>AI đang thay đổi cách chúng ta học điều mới</strong><span class="featured-read">Đọc câu chuyện <i class="fa-solid fa-arrow-right"></i></span></span></a>
+        <a class="featured-card featured-garden" href="#feed" onclick="filterHashtag('laptrinh_php')"><span class="featured-number">02</span><span class="featured-copy"><span class="featured-category">Ghi chép · 4 phút đọc</span><strong>Một giao diện tốt bắt đầu từ sự giản dị</strong><span class="featured-read">Đọc câu chuyện <i class="fa-solid fa-arrow-right"></i></span></span></a>
+        <a class="featured-card featured-travel" href="#feed" onclick="filterNavFeed('news')"><span class="featured-number">03</span><span class="featured-copy"><span class="featured-category">Tin tức · 5 phút đọc</span><strong>Những ý tưởng nhỏ tạo nên thay đổi lớn</strong><span class="featured-read">Đọc câu chuyện <i class="fa-solid fa-arrow-right"></i></span></span></a>
+      </div>
+    </section>
+
+    <div class="editorial-layout page-shell" id="feed">
+      <aside class="left-sidebar editorial-following">
+        <div class="sidebar-card">
+          <div class="sidebar-title"><span class="section-kicker">Bạn đọc</span><span class="following-title-text" id="following-title-text">Những người mình theo dõi</span></div>
+          <div id="following-list"></div>
+          <button class="text-link" onclick="filterNavFeed('following')">Xem bài viết của họ <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="sidebar-card" style="margin-top: 12px; padding: 12px 16px;">
+          <a href="{{ url('/bookmarks') }}" class="text-link sidebar-bookmarks-link" id="sidebar-bookmarks-link" onclick="navigateToBookmarks(event)" style="display:flex;align-items:center;gap:8px;font-weight:600;text-decoration:none;color:#252b28;">
+            <svg class="icon-bookmark-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Bài viết đã lưu</span>
+          </a>
+        </div>
+      </aside>
+      <section class="main-feed" aria-label="Bài viết mới">
+        <div class="feed-intro">
+          <div><span class="section-kicker">Từ trang viết</span><h2>Mới trên blog</h2></div>
+          <div class="feed-tabs-cluster">
+            <button class="feed-filter active" id="nav-home" onclick="filterNavFeed('home')">Tất cả</button>
+            <button class="feed-filter" id="nav-for_you" onclick="filterNavFeed('for_you')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px;" aria-hidden="true">
+                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path>
+              </svg>Dành cho bạn
+            </button>
+            <button class="feed-filter" id="nav-news" onclick="filterNavFeed('news')">Tin tức</button>
+            <button class="feed-filter" id="nav-following" onclick="filterNavFeed('following')">Đang theo dõi</button>
+
+            <!-- Bộ lọc nhanh Trang chủ (Loại bài & Hình ảnh) -->
+            <div class="feed-quick-filters" id="feed-quick-filters">
+              <div class="feed-filter-select-wrapper" title="Lọc theo loại bài viết">
+                <svg class="select-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h6"/></svg>
+                <select id="feed-filter-type" class="feed-filter-select" aria-label="Loại bài viết" onchange="handleHomeFilterChange()">
+                  <option value="all">Tất cả loại</option>
+                  <option value="blog">Bài viết (Blog)</option>
+                  <option value="news">Tin tức (News)</option>
+                </select>
+                <svg class="select-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+
+              <div class="feed-filter-select-wrapper" title="Lọc bài có hình ảnh">
+                <svg class="select-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <select id="feed-filter-has-image" class="feed-filter-select" aria-label="Hình ảnh kèm theo" onchange="handleHomeFilterChange()">
+                  <option value="all">Tất cả</option>
+                  <option value="1">Có hình ảnh</option>
+                  <option value="0">Không có hình ảnh</option>
+                </select>
+                <svg class="select-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-feed-refresh" id="btn-feed-refresh" onclick="refreshFeedNew()" title="Xáo trộn & hiển thị các bài viết mới khác">
+            <svg class="refresh-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <span>Làm mới bảng tin (Đổi bài mới)</span>
+          </button>
+        </div>
+
+        <section class="post-card composer-card" id="create-post-card" aria-label="Tạo bài viết">
+          <div class="composer-heading"><span class="composer-avatar" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><div><strong>Ghi lại một điều bạn vừa nghĩ</strong><span>Bài viết mới sẽ xuất hiện trên trang chủ.</span></div></div>
+          <div class="flex-col gap-sm">
+            <input type="text" id="post-title-input" class="input-field" placeholder="Tiêu đề bài viết...">
+            <textarea id="post-editor-input" class="input-field" rows="3" placeholder="Hôm nay bạn muốn kể câu chuyện gì?"></textarea>
+            <div class="upload-row">
+              <label for="post-file-input" class="btn-upload-label"><i class="fa-regular fa-image"></i> Thêm ảnh</label>
+              <input type="file" id="post-file-input" accept="image/*" class="file-input-hidden">
+              <button type="button" class="btn-ai-assist" onclick="openAiWriterModal()" style="background:#eef6f0; color:#23613b; border:1px solid #c2e0cd; font-size:12px; font-weight:600; padding:6px 12px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green,#2d6347); vertical-align:-2px;" aria-hidden="true"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/></svg> AI Sửa văn phong
+              </button>
+              <span class="font-size-sm text-muted">Bạn cũng có thể dán ảnh vào phần nội dung</span>
+            </div>
+            <div id="image-preview-container" class="image-preview-container"><img id="image-preview" src="" class="image-preview-img" alt="Ảnh xem trước"><button onclick="removeSelectedImage()" class="btn-remove-image" aria-label="Xóa ảnh">×</button></div>
+            <input type="text" id="post-tags-input" class="input-field" placeholder="Chủ đề (ví dụ: congnghe, ghi_chep)">
+          </div>
+          <div class="create-post-actions"><select id="post-type-select" class="input-field select-auto-width"><option value="blog">Bài viết (Blog)</option><option value="news">Tin tức (News)</option></select><button class="action-btn action-btn-primary" onclick="createNewPost()"><i class="fa-solid fa-paper-plane"></i> Đăng bài</button></div>
+        </section>
+        <div id="feed-container" class="feed-posts"></div>
+        <!-- Khung phân trang / Tải thêm & Infinite Scroll -->
+        <div id="feed-load-more-wrapper" class="feed-load-more-wrapper">
+          <button type="button" class="btn-load-more-feed" id="btn-load-more-feed" onclick="loadMoreFeedPosts()">
+            <svg class="load-more-icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            <span class="btn-text">Tải thêm bài viết</span>
+          </button>
+          <div id="feed-loading-spinner" class="feed-loading-spinner" style="display: none;">
+            <svg class="spinner-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+            <span>Đang tải thêm bài viết thú vị...</span>
+          </div>
+          <p id="feed-end-message" class="feed-end-message" style="display: none;">
+            🎉 Bạn đã xem hết các bài viết trong mục này! Nhấn <a href="javascript:void(0)" onclick="refreshFeedNew()">Làm mới bảng tin</a> để cập nhật bài viết mới.
+          </p>
+        </div>
+      </section>
+      <aside class="right-sidebar editorial-aside">
+        <section class="about-card" id="about"><span class="about-overline">Người viết blog</span><div class="about-avatar"><img class="about-author-avatar" src="{{ asset('assets/images/avatars/user-demo.svg') }}" alt="Chân dung RobloxAdmin"></div><h2 class="about-title">Xin chào, mình là RobloxAdmin.</h2><p class="about-bio">Quản trị viên hệ thống Góc Nhỏ · Đam mê kiến trúc phần mềm, AI & công nghệ mã nguồn mở.</p><a href="{{ url('/profile') }}?id=1" class="text-link about-link">Đọc thêm về mình <i class="fa-solid fa-arrow-right"></i></a><div class="about-signature"><span class="about-author-name">RobloxAdmin</span> <span class="about-sig-star"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:baseline;margin-left:3px;" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span></div></section>
+        <section class="sidebar-card news-card widget-top-news" id="widget-top-news-container">
+          <div class="sidebar-title">
+            <span class="section-kicker">Đang được quan tâm</span>
+            <div class="widget-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+              <h3 style="margin:0; font-size:16px; font-weight:700;">Tin tức nổi bật</h3>
+              <div class="widget-pagination-controls" style="display:flex; align-items:center; gap:6px;">
+                <span id="widget-page-info" style="font-size:11px; color:#7c827d;">Trang 1/1</span>
+                <button type="button" class="widget-page-btn" id="widget-prev-btn" onclick="paginateWidgetNews(-1)" title="Trang trước">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button type="button" class="widget-page-btn" id="widget-next-btn" onclick="paginateWidgetNews(1)" title="Trang sau">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="widget-news-list" id="widget-top-news-list">
+            <p class="text-muted text-sm" style="padding:10px 0; font-size:12px; color:#888;">Đang tải tin tức nổi bật...</p>
+          </div>
+        </section>
+        <section class="sidebar-card tags-card"><div class="sidebar-title"><span class="section-kicker">Theo chủ đề</span>Từ khóa nổi bật</div><div id="widget-top-hashtags"></div></section>
+        <div class="newsletter-note">
+          <svg class="newsletter-icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <strong>Thích những câu chuyện này?</strong>
+          <span>Ghé lại đây mỗi ngày để đọc thêm những chia sẻ mới hoặc tự tay viết nên câu chuyện của riêng bạn.</span>
+          <button type="button" id="btn-sidebar-new-post" class="newsletter-cta-btn" data-action="write-post" onclick="scrollToPostComposer(event)" style="position:relative; z-index:5; cursor:pointer; pointer-events:auto;">
+            Viết bài mới <span class="cta-arrow" aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="blog-footer"><a class="blog-brand" href="#home"><span class="brand-mark">g.</span><span>góc nhỏ</span></a><span>Một trang viết cá nhân · 2026</span><a href="#home">Lên đầu trang ↑</a></footer>
+
+  <div class="modal-overlay" id="post-modal" style="display:none; pointer-events:none;"><div class="modal-content"><button class="close-modal" onclick="closeModal('post-modal')" aria-label="Đóng">&times;</button><div id="modal-body-content"></div></div></div>
+
+  <!-- Modal Cài đặt tài khoản (Đổi tên, đổi mật khẩu & Đăng xuất) -->
+  <div class="modal-overlay" id="settings-modal" style="display:none;">
+    <div class="modal-content" style="max-width: 480px; padding: 24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #f0efe9; padding-bottom:12px;">
+        <h3 style="margin:0; font-size:18px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-gear" style="color:#3e6652;"></i> Cài đặt tài khoản
+        </h3>
+        <button type="button" class="close-modal" onclick="closeSettingsModal()" aria-label="Đóng">&times;</button>
+      </div>
+
+      <form id="settings-form">
+        @csrf
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Tên đăng nhập (@username)</label>
+          <input type="text" id="settings-username" class="input-field" required minlength="3" maxlength="40" placeholder="ví dụ: nguyenvana">
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Họ và tên hiển thị</label>
+          <input type="text" id="settings-fullname" class="input-field" required maxlength="120" placeholder="ví dụ: Nguyễn Văn A">
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <label for="settings-bio" style="font-size:12px; font-weight:600; color:#444; margin:0;">
+              <i class="fa-solid fa-pen-fancy" style="color:#3e6652; margin-right:4px;"></i> Tiểu sử (Giới thiệu bản thân)
+            </label>
+            <span style="font-size:11px; color:#888;"><span id="settings-bio-count">0</span>/300</span>
+          </div>
+          <textarea id="settings-bio" class="input-field" rows="3" maxlength="300" style="resize:vertical; font-family:inherit; font-size:13px; line-height:1.45;" placeholder="Viết vài dòng giới thiệu về bản thân, sở thích, châm ngôn sống..."></textarea>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Email</label>
+          <input type="email" id="settings-email" class="input-field" disabled style="background:#f4f4f4; cursor:not-allowed;">
+        </div>
+
+        <hr style="border:0; border-top:1px dashed #e0e0e0; margin:16px 0;">
+
+        <div style="margin-bottom: 10px; font-size: 13px; font-weight: 700; color: #3e6652;">
+          <i class="fa-solid fa-lock"></i> Đổi mật khẩu <span style="font-size:11px; font-weight:normal; color:#888;">(Bỏ trống nếu không muốn đổi)</span>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Mật khẩu hiện tại</label>
+          <input type="password" id="settings-current-password" class="input-field" placeholder="Nhập mật khẩu hiện tại nếu muốn đổi">
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Mật khẩu mới (ít nhất 8 ký tự)</label>
+          <input type="password" id="settings-new-password" class="input-field" minlength="8" placeholder="Nhập mật khẩu mới">
+        </div>
+
+        <div id="settings-message" style="margin-bottom: 14px; font-size: 13px; font-weight: 500; min-height: 20px;"></div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+          <button type="button" class="action-btn" id="settings-modal-logout-btn" style="background:#dc2626; color:#fff; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+          </button>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="action-btn" onclick="closeSettingsModal()" style="background:#e5e7eb; color:#374151;">Hủy</button>
+            <button type="submit" class="action-btn action-btn-primary" id="settings-submit-btn" style="background:#3e6652; color:#fff;">
+              Lưu thay đổi
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Chuyển đổi tài khoản phong cách Facebook -->
+  <div class="modal-overlay" id="switch-account-modal" style="display:none;">
+    <div class="modal-content" style="max-width: 440px; padding: 22px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e4e6eb; padding-bottom:12px;">
+        <h3 style="margin:0; font-size:18px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-repeat" style="color:#0284c7;"></i> Chuyển đổi tài khoản
+        </h3>
+        <button type="button" class="close-modal" onclick="closeSwitchModal()" aria-label="Đóng">&times;</button>
+      </div>
+
+      <p style="font-size:13px; color:#65676b; margin-top:0; margin-bottom:14px;">
+        Chọn tài khoản bạn muốn chuyển đến hoặc đăng nhập tài khoản khác:
+      </p>
+
+      <div id="switch-account-list">
+        <!-- Được điền tự động bằng JavaScript -->
+      </div>
+
+      <div style="margin-top:14px; padding-top:12px; border-top:1px dashed #e4e6eb;">
+        <a href="{{ url('/account') }}?mode=login" class="action-btn" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; box-sizing:border-box; background:#f0f2f5; color:#050505; text-decoration:none; padding:10px; border-radius:6px; font-size:13px; font-weight:600;">
+          <i class="fa-solid fa-plus"></i> Đăng nhập vào tài khoản khác
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal AI Trợ lý viết & Tinh chỉnh văn phong -->
+  <div class="modal-overlay" id="ai-writer-modal" style="display:none;">
+    <div class="modal-content modal-content-ai" style="max-width: 620px; width: 100%;">
+      <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid var(--border,#e4e8e2);">
+        <div class="flex items-center gap-2" style="display:flex; align-items:center; gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green,#3e6652); vertical-align:-3px;" aria-hidden="true">
+            <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/>
+            <path d="m14 7 3 3"/>
+            <path d="M5 6v4"/>
+            <path d="M19 14v4"/>
+            <path d="M10 2v2"/>
+            <path d="M7 8H3"/>
+            <path d="M21 16h-4"/>
+          </svg>
+          <h3 style="margin:0; font-size:18px; font-weight:700;">AI Trợ lý viết & Tinh chỉnh văn phong</h3>
+        </div>
+        <button type="button" class="close-modal" onclick="closeAIModal('ai-writer-modal')" aria-label="Đóng">&times;</button>
+      </div>
+      <div class="modal-body flex-col gap-sm" style="display:flex; flex-direction:column; gap:12px; padding:18px 0;">
+        <div>
+          <label for="ai-writer-original" class="text-sm font-semibold" style="display:block; margin-bottom:6px; font-size:13px; font-weight:600;">Nội dung bài viết ban đầu:</label>
+          <textarea id="ai-writer-original" class="input-field" rows="4" placeholder="Nhập hoặc dán đoạn văn bạn muốn AI trau chuốt..." style="width:100%; resize:vertical; font-family:inherit;"></textarea>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#f9faf8; padding:10px 14px; border-radius:10px; border:1px solid #edf0ec;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label for="ai-writer-tone" style="font-size:13px; font-weight:600; color:var(--text,#1e2621); display:inline-flex; align-items:center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green,#3e6652); vertical-align:-2px; margin-right:5px;" aria-hidden="true">
+                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                <line x1="16" y1="8" x2="2" y2="22"/>
+                <line x1="17.5" y1="15" x2="9" y2="15"/>
+              </svg>Phong cách:
+            </label>
+            <select id="ai-writer-tone" class="input-field select-auto-width" style="padding:6px 12px; border-radius:8px; font-size:13px; cursor:pointer;">
+              <option value="professional">Nghiêm túc & Chuyên nghiệp</option>
+              <option value="literary">Văn chương & Sâu lắng</option>
+              <option value="concise">Ngắn gọn & Súc tích</option>
+            </select>
+          </div>
+          <button type="button" class="action-btn action-btn-primary" id="ai-writer-submit-btn" onclick="requestAiImprovement()" style="padding:8px 18px; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;" aria-hidden="true">
+              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+            </svg> Chỉnh sửa văn phong
+          </button>
+        </div>
+        <div id="ai-writer-status" style="display:none; padding:10px 14px; border-radius:8px; font-size:13px;"></div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label for="ai-writer-result" class="text-sm font-semibold" style="font-size:13px; font-weight:600;">Gợi ý từ AI (bạn có thể tự sửa lại nếu cần):</label>
+            <span style="font-size:11px; color:var(--muted,#7c827d);">Có thể chỉnh sửa trực tiếp</span>
+          </div>
+          <textarea id="ai-writer-result" class="input-field" rows="5" placeholder="Nội dung đã được biên tập sẽ xuất hiện tại đây..." style="width:100%; resize:vertical; font-family:inherit; background:#ffffff;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer flex justify-between" style="display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--border,#e4e8e2);">
+        <button type="button" class="action-btn" onclick="closeAIModal('ai-writer-modal')" style="padding:8px 16px;">Đóng</button>
+        <button type="button" class="action-btn action-btn-primary" id="ai-writer-apply-btn" onclick="applyAiSuggestion()" style="padding:8px 18px; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg> Áp dụng vào bài viết
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>window.APP_URL = "{{ url('/') }}";</script>
+  <script src="{{ asset('data/users.js') }}"></script><script src="{{ asset('data/hashtags.js') }}"></script><script src="{{ asset('data/posts.js') }}?v=20261118-laravel1"></script><script src="{{ asset('data/comments.js') }}?v=20261118-laravel1"></script><script src="{{ asset('assets/js/csrf.js') }}?v=20261118-laravel1"></script><script src="{{ asset('assets/js/avatar-picker.js') }}?v=20261118-laravel1"></script><script src="{{ asset('assets/js/widget_pagination.js') }}?v=20261118-laravel1"></script><script src="{{ asset('assets/js/app.js') }}?v=20261119-typefix1"></script>
+  <script src="{{ asset('assets/js/ai_assistant.js') }}?v=20261118-laravel1"></script>
+  <script src="{{ asset('assets/js/animations.js') }}?v=20261118-laravel1"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+# Environment & local config
+.env
+cookies.txt
+/vendor/
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+!/storage/framework/.gitkeep
+!/storage/framework/cache/.gitkeep
+!/storage/framework/sessions/.gitkeep
+!/storage/framework/views/.gitkeep
+
+# Storage
+storage/cache/*.cache
+!storage/cache/.gitkeep
+storage/logs/*.log
+!storage/logs/.gitkeep
+
+# Uploads
+public/uploads/*
+!public/uploads/.gitkeep
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Ignore all Markdown files except root README.md
+*.md
+!/README.md
+!/cachpushgit.md
+
+# Ignore internal documentation
+/docs/
+
+# Ignore local database backups
+/database/backups/
+
+# Ignore local logs and cache
+/storage/logs/
+storage/cache/
+
+# Ignore uploaded user files
+/public/uploads/
+
+# Ignore environment configuration
+/.env

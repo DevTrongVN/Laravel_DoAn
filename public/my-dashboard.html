@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f0">
+  <title>Dashboard cá nhân · Góc Nhỏ</title>
+  <link rel="stylesheet" href="assets/css/my-dashboard.css">
+</head>
+<body>
+  <div class="dashboard-shell">
+    <header class="dashboard-header">
+      <a class="brand" href="index.html"><span class="brand-mark">g.</span><span>góc nhỏ</span></a>
+      <nav aria-label="Điều hướng">
+        <a href="index.html">Bảng tin</a>
+        <a href="notifications">Thông báo</a>
+        <a href="accounts.html">Tài khoản trên thiết bị</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="welcome-row">
+        <div>
+          <span class="eyebrow">KHÔNG GIAN CỦA BẠN</span>
+          <h1>Dashboard cá nhân</h1>
+          <p id="dashboard-owner">Đang tải thông tin tài khoản…</p>
+        </div>
+        <a class="write-link" href="index.html#feed">＋ Viết bài mới</a>
+      </section>
+
+      <section id="dashboard-message" class="message-card" hidden></section>
+      <section id="dashboard-content" hidden>
+        <div class="stats-grid" id="dashboard-stats"></div>
+        <div class="dashboard-columns">
+          <section class="panel posts-panel">
+            <div class="panel-heading">
+              <div><span class="eyebrow">NỘI DUNG</span><h2>Bài viết của mình</h2></div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <label for="dashboard-sort-select" class="sr-only" style="display:none;">Sắp xếp theo</label>
+                <select id="dashboard-sort-select" onchange="changeDashboardSort(this.value)" style="padding:6px 12px; border-radius:8px; border:1px solid #dcdfd9; background:#fff; font-size:13px; font-family:inherit; color:#1e2621; cursor:pointer;">
+                  <option value="latest">Mới nhất</option>
+                  <option value="views">Lượt xem cao nhất</option>
+                  <option value="interactions">Tương tác nhiều nhất</option>
+                </select>
+                <span id="post-count" class="count-pill"></span>
+              </div>
+            </div>
+            <div id="my-posts" class="posts-list"></div>
+          </section>
+          <aside class="panel activity-panel">
+            <div class="panel-heading"><div><span class="eyebrow">CỘNG ĐỒNG</span><h2>Tương tác gần đây</h2></div></div>
+            <div id="my-activity" class="activity-list"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <footer>Thống kê tương tác của người khác với bài viết của bạn.</footer>
+  </div>
+  <script src="assets/js/csrf.js?v=20261114-csrf1"></script>
+  <script src="assets/js/my-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Options -MultiViews
+RewriteEngine On
+
+# 1. Bảo vệ trang Quản trị: Chặn truy cập trực tiếp file admin.html, bắt buộc qua Server-side Controller
+RewriteRule ^admin\.html$ index.php?url=admin [QSA,L]
+
+# 2. Giữ nguyên tài nguyên tĩnh khác, chuyển URL API và trang chủ qua front controller.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

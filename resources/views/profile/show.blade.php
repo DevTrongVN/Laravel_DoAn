@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang Cá Nhân - Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap&subset=vietnamese" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v=20261118-laravel1">
+  <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}?v=20261118-laravel1">
+  <link rel="stylesheet" href="{{ asset('assets/css/blog-theme.css') }}?v=20261118-laravel1">
+  <link rel="stylesheet" href="{{ asset('assets/css/profile-dashboard.css') }}?v=20261119-cartoon2">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <h2 class="navbar-brand" onclick="window.location.href='{{ url('/') }}'" style="cursor:pointer;">Góc Nhỏ</h2>
+    </div>
+    <div class="navbar-center">
+      <a href="{{ url('/') }}" class="nav-btn">← Quay lại Bảng Tin</a>
+    </div>
+    <div class="navbar-right">
+      <a href="{{ url('/admin') }}" class="nav-btn nav-btn-danger" id="nav-admin-link" style="display:inline-flex;align-items:center;gap:6px;"><i class="fa-solid fa-sliders"></i> Admin</a>
+      <!-- Nút Chuông Thông Báo -->
+      <div class="notification-bell-wrapper" id="nav-notification-wrapper" style="display:none;">
+        <button type="button" class="nav-bell-btn" id="nav-bell-btn" title="Thông báo" aria-label="Thông báo" aria-haspopup="true" aria-expanded="false">
+          <svg class="nav-bell-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span class="bell-badge" id="nav-bell-badge" style="display:none;">0</span>
+        </button>
+        <div class="nav-notification-dropdown" id="nav-notification-dropdown" style="display:none;">
+          <div class="notif-dropdown-header">
+            <h4>Thông báo</h4>
+            <div class="notif-dropdown-actions">
+              <button type="button" class="notif-read-all-btn" id="dropdown-mark-all-read" title="Đánh dấu tất cả đã đọc">
+                <svg class="notif-check-double-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-right:4px;"><polyline points="18 6 7 17 2 12"></polyline><polyline points="22 10 13 19 10 16"></polyline></svg>Đã đọc
+              </button>
+              <a href="{{ url('/notifications') }}" class="notif-view-all-link">Xem tất cả</a>
+            </div>
+          </div>
+          <div class="notif-dropdown-list" id="dropdown-notif-list">
+            <div class="notif-dropdown-loading"><svg class="icon-spin-slow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> Đang tải thông báo...</div>
+          </div>
+          <div class="notif-dropdown-footer">
+            <a href="{{ url('/notifications') }}" class="notif-see-full-link">Đi tới Trung tâm thông báo →</a>
+          </div>
+        </div>
+      </div>
+      <div class="fb-menu-wrapper" id="fb-user-menu-container">
+        <button type="button" class="fb-avatar-btn" id="fb-avatar-trigger" title="Tài khoản cá nhân" aria-haspopup="true" aria-expanded="false">
+          <img id="fb-nav-avatar" class="fb-avatar-img" src="{{ asset('assets/images/avatars/user-admin.svg') }}" alt="Avatar">
+          <span class="fb-nav-name" id="fb-nav-username"></span>
+          <span class="fb-avatar-arrow"><i class="fa-solid fa-chevron-down"></i></span>
+        </button>
+        <div class="fb-dropdown-panel" id="fb-dropdown-panel" style="display:none;"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-container main-container-single profile-main-wrapper">
+    <!-- Khung Profile Header Hoạt Hình -->
+    <div class="profile-card profile-card-doodle" id="profile-header"></div>
+
+    <section id="personal-insights" class="profile-insights" hidden>
+      <div class="profile-insights-header">
+        <div class="insights-title-group">
+          <span class="insights-icon-bubble">📊</span>
+          <div>
+            <h3>Thống kê bài viết của bạn</h3>
+            <p class="insights-subtitle">Tổng quan hoạt động và tương tác từ cộng đồng Góc Nhỏ</p>
+          </div>
+        </div>
+      </div>
+      <div id="profile-insight-stats" class="profile-insight-stats"></div>
+      <div class="profile-insight-activity">
+        <div class="profile-insight-activity-header">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:16px;">⚡</span>
+            <h4>Tương tác gần đây</h4>
+          </div>
+          <span id="profile-insight-activity-count" style="font-size:12px; color:#059669; font-weight:700; background:#ecfdf5; padding:3px 10px; border-radius:12px;"></span>
+        </div>
+        <div id="profile-insight-activity-list" class="profile-insight-activity-container"></div>
+        <div id="profile-insight-toggle-wrapper" style="text-align:center; display:none;">
+          <button type="button" id="btn-toggle-activity" class="profile-insight-toggle-btn">
+            <span>Xem thêm</span> <i class="fa-solid fa-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Danh sách bài viết của User (Khung Header Hoạt Hình) -->
+    <div class="profile-feed-header-bar">
+      <div class="feed-header-left">
+        <span class="feed-header-icon">📚</span>
+        <div>
+          <h3 class="feed-header-title">Bài viết đã đăng</h3>
+          <p class="feed-header-subtitle">Những góc nhìn, tản văn và câu chuyện từ tác giả</p>
+        </div>
+      </div>
+    </div>
+    <div id="profile-feed-container"></div>
+  </div>
+
+  <!-- POPUP MODAL XEM CHI TIẾT BÀI VIẾT BÌNH LUẬN -->
+  <div class="modal-overlay" id="post-modal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal('post-modal')">&times;</button>
+      <div id="modal-body-content"></div>
+    </div>
+  </div>
+
+  <!-- Modal Xem trước & Tải ảnh đại diện -->
+  <div class="modal-overlay" id="avatar-preview-modal" style="display:none;">
+    <div class="modal-content" style="max-width: 440px; padding: 24px; text-align: center;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #f0efe9; padding-bottom:10px;">
+        <h3 style="margin:0; font-size:18px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-camera" style="color:#0d9488;"></i> Thay đổi ảnh đại diện
+        </h3>
+        <button type="button" class="close-modal" id="btn-close-avatar-modal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <p class="text-muted" style="font-size:13px; margin-bottom:12px;">Xem trước ảnh đại diện mới trước khi lưu:</p>
+
+      <div class="avatar-preview-box">
+        <img id="avatar-preview-image" class="avatar-preview-img" src="" alt="Xem trước ảnh">
+      </div>
+
+      <div id="avatar-file-details" style="font-size:12px; color:#64748b; margin-bottom:12px;"></div>
+      <div id="avatar-upload-feedback" style="font-size:13px; margin-bottom:12px;"></div>
+
+      <div style="display:flex; justify-content:center; gap:12px;">
+        <button type="button" class="action-btn" id="btn-cancel-avatar-modal" style="background:#e2e8f0; color:#334155;">Hủy</button>
+        <button type="button" class="action-btn action-btn-primary" id="btn-confirm-avatar-upload">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Lưu ảnh đại diện
+        </button>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="avatar-file-input" name="avatar" accept="image/png, image/jpeg, image/webp, image/gif" style="display:none;">
+  <input type="file" id="custom-avatar-file-input" accept="image/png, image/jpeg, image/webp, image/gif" style="display:none;">
+
+  <!-- Modal Cài đặt tài khoản (Đổi tên, đổi mật khẩu & Đăng xuất) -->
+  <div class="modal-overlay" id="settings-modal" style="display:none;">
+    <div class="modal-content" style="max-width: 480px; padding: 24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #f0efe9; padding-bottom:12px;">
+        <h3 style="margin:0; font-size:18px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-gear" style="color:#3e6652;"></i> Cài đặt tài khoản
+        </h3>
+        <button type="button" class="close-modal" onclick="closeSettingsModal()" aria-label="Đóng">&times;</button>
+      </div>
+
+      <form id="settings-form">
+        @csrf
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Tên đăng nhập (@username)</label>
+          <input type="text" id="settings-username" class="input-field" required minlength="3" maxlength="40" placeholder="ví dụ: nguyenvana">
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Họ và tên hiển thị</label>
+          <input type="text" id="settings-fullname" class="input-field" required maxlength="120" placeholder="ví dụ: Nguyễn Văn A">
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <label for="settings-bio" style="font-size:12px; font-weight:600; color:#444; margin:0;">
+              <i class="fa-solid fa-pen-fancy" style="color:#3e6652; margin-right:4px;"></i> Tiểu sử (Giới thiệu bản thân)
+            </label>
+            <span style="font-size:11px; color:#888;"><span id="settings-bio-count">0</span>/300</span>
+          </div>
+          <textarea id="settings-bio" class="input-field" rows="3" maxlength="300" style="resize:vertical; font-family:inherit; font-size:13px; line-height:1.45;" placeholder="Viết vài dòng giới thiệu về bản thân, sở thích, châm ngôn sống..."></textarea>
+        </div>
+
+
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Email</label>
+          <input type="email" id="settings-email" class="input-field" disabled style="background:#f4f4f4; cursor:not-allowed;">
+        </div>
+
+        <hr style="border:0; border-top:1px dashed #e0e0e0; margin:16px 0;">
+
+        <div style="margin-bottom: 10px; font-size: 13px; font-weight: 700; color: #3e6652;">
+          <i class="fa-solid fa-lock"></i> Đổi mật khẩu <span style="font-size:11px; font-weight:normal; color:#888;">(Bỏ trống nếu không muốn đổi)</span>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Mật khẩu hiện tại</label>
+          <input type="password" id="settings-current-password" class="input-field" placeholder="Nhập mật khẩu hiện tại nếu muốn đổi">
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px; color:#444;">Mật khẩu mới (ít nhất 8 ký tự)</label>
+          <input type="password" id="settings-new-password" class="input-field" minlength="8" placeholder="Nhập mật khẩu mới">
+        </div>
+
+        <div id="settings-message" style="margin-bottom: 14px; font-size: 13px; font-weight: 500; min-height: 20px;"></div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+          <button type="button" class="action-btn" id="settings-modal-logout-btn" style="background:#dc2626; color:#fff; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+          </button>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="action-btn" onclick="closeSettingsModal()" style="background:#e5e7eb; color:#374151;">Hủy</button>
+            <button type="submit" class="action-btn action-btn-primary" id="settings-submit-btn" style="background:#3e6652; color:#fff;">
+              Lưu thay đổi
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Chuyển đổi tài khoản phong cách Facebook -->
+  <div class="modal-overlay" id="switch-account-modal" style="display:none;">
+    <div class="modal-content" style="max-width: 440px; padding: 22px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e4e6eb; padding-bottom:12px;">
+        <h3 style="margin:0; font-size:18px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-repeat" style="color:#0284c7;"></i> Chuyển đổi tài khoản
+        </h3>
+        <button type="button" class="close-modal" onclick="closeSwitchModal()" aria-label="Đóng">&times;</button>
+      </div>
+
+      <p style="font-size:13px; color:#65676b; margin-top:0; margin-bottom:14px;">
+        Chọn tài khoản bạn muốn chuyển đến hoặc đăng nhập tài khoản khác:
+      </p>
+
+      <div id="switch-account-list">
+        <!-- Được điền tự động bằng JavaScript -->
+      </div>
+
+      <div style="margin-top:14px; padding-top:12px; border-top:1px dashed #e4e6eb;">
+        <a href="{{ url('/accounts') }}" class="action-btn" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; box-sizing:border-box; background:#f0f2f5; color:#050505; text-decoration:none; padding:10px; border-radius:6px; font-size:13px; font-weight:600;">
+          <i class="fa-solid fa-users"></i> Qu&#7843;n l&#253; t&#224;i kho&#7843;n tr&#234;n thi&#7871;t b&#7883;
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Data & Scripts -->
+  <script>window.APP_URL = "{{ url('/') }}";</script>
+  <script src="{{ asset('data/users.js') }}"></script>
+  <script src="{{ asset('data/hashtags.js') }}"></script>
+  <script src="{{ asset('data/posts.js') }}?v=20261118-laravel1"></script>
+  <script src="{{ asset('data/comments.js') }}?v=20261118-laravel1"></script>
+  <script src="{{ asset('assets/js/account-memory.js') }}"></script>
+  <script src="{{ asset('assets/js/csrf.js') }}?v=20261118-laravel1"></script>
+  <script src="{{ asset('assets/js/avatar-picker.js') }}?v=20261118-laravel1"></script>
+  <script src="{{ asset('assets/js/profile.js') }}?v=20261119-cartoon2"></script>
+</body>
+</html>
